@@ -3,6 +3,9 @@ dependencies:
     - matplotlib
     - numpy
     - sphinx
+    - seaborn
+    - ipython
+    - jupyter_client
     - pip:
         - autodocsumm
         - sphinx-argparse
