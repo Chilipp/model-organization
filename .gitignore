@@ -55,6 +55,7 @@ docs/_build/
 docs/index.doctree
 docs/_static/tangent.png
 docs/square.py
+docs/trigo.tar
 
 # PyBuilder
 target/
