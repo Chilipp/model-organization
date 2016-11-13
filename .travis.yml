@@ -3,11 +3,6 @@ python:
   - "2.7"
   - "3.4"
   - "3.5"
-# sudo is required for installing pandoc
-sudo: required
-env:
-  - SPHINX_VERSION=1.3
-  - SPHINX_VERSION=1.4
 install:
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
@@ -23,7 +18,7 @@ install:
   - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
-  - conda create python=$TRAVIS_PYTHON_VERSION matplotlib numpy -n test_env
+  - conda create python=$TRAVIS_PYTHON_VERSION matplotlib seaborn numpy -n test_env
   - source activate test_env
   - pip install coveralls
   - python setup.py install

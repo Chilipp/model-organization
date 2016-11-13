@@ -102,7 +102,7 @@ class OrganizerTest(unittest.TestCase):
         self.assertNotIn('test', self.organizer.exp_config)
 
     def test_info(self):
-        from gwgen.config import ordered_yaml_load
+        from model_organization.config import ordered_yaml_load
         self._test_init()
         organizer = self.organizer
         organizer.print_ = str
