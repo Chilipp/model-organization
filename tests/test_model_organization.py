@@ -137,11 +137,6 @@ class OrganizerTest(unittest.TestCase):
         # test file names
         self.organizer.config.save()
         projectname = self.organizer.exp_config['project']
-        print(self.organizer.info(exp_path=True))
-        print('-' * 80)
-        print(osp.join(self.test_dir, projectname,
-                                  '.project',
-                                  self.organizer.experiment + '.yml'))
         self.assertEqual(self.organizer.info(exp_path=True),
                          osp.join(self.test_dir, projectname,
                                   '.project',
@@ -258,6 +253,16 @@ class OrganizerTest(unittest.TestCase):
 
         self.organizer.app_main('main', match=True, new=True)
         self.assertEqual(organizer.experiment, 'test_main5')
+
+    def test_config(self):
+        """Test whether the ExperimentConfig works correctly"""
+        self._test_init()
+        exp = self.organizer.experiment
+        self.organizer.config.save()
+        organizer2 = self.organizer.__class__()
+        # the experiment config should not have been loaded
+        self.assertIsInstance(dict(organizer2.config.experiments)[exp],
+                              six.string_types)
 
 
 if __name__ == '__main__':
