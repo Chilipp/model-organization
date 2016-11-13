@@ -247,7 +247,31 @@ class ExperimentsConfig(OrderedDict):
                 self._project_map[val.project].append(key)
         return self._project_map
 
+    @property
+    def exp_files(self):
+        ret = OrderedDict()
+        # restore the order of the experiments
+        exp_file = self.exp_file
+        if osp.exists(exp_file):
+            for key, val in safe_load(exp_file).items():
+                ret[key] = val
+        for project, d in self.projects.items():
+            project_path = d['root']
+            config_path = osp.join(project_path, '.project')
+            if not osp.exists(config_path):
+                continue
+            for fname in glob.glob(osp.join(config_path, '*.yml')):
+                if fname == '.project.yml':
+                    continue
+                exp = osp.splitext(osp.basename(fname))[0]
+                if not isinstance(ret.get(exp), Archive):
+                    ret[exp] = osp.join(config_path, exp + '.yml')
+                if exp not in self._project_map[project]:
+                    self._project_map[project].append(exp)
+        return ret
+
     def __init__(self, projects, d=None, project_map=None):
+        super(ExperimentsConfig, self).__init__()
         self.projects = projects
         self._finalized = False
         self._project_map = project_map or defaultdict(list)
@@ -256,23 +280,9 @@ class ExperimentsConfig(OrderedDict):
                 for key, val in d.items():
                     self[key] = val
             else:
-                # restore the order of the experiments
-                exp_file = self.exp_file
-                if osp.exists(exp_file):
-                    for key, val in safe_load(exp_file).items():
-                        self[key] = val
                 # setup the paths for the experiments
-                for project, d in projects.items():
-                    project_path = d['root']
-                    config_path = osp.join(project_path, '.project')
-                    if not osp.exists(config_path):
-                        continue
-                    for fname in glob.glob(osp.join(config_path, '*.yml')):
-                        if fname == '.project.yml':
-                            continue
-                        exp = osp.splitext(osp.basename(fname))[0]
-                        self[exp] = osp.join(config_path, exp + '.yml')
-                        self._project_map[project].append(exp)
+                for key, val in self.exp_files.items():
+                    self[key] = val
         self._finalized = False
 
     def __getitem__(self, attr):
@@ -417,6 +427,7 @@ class ProjectsConfig(OrderedDict):
         return osp.join(self.conf_dir, 'projects.yml')
 
     def __init__(self, conf_dir, d=None):
+        super(ProjectsConfig, self).__init__()
         self.conf_dir = conf_dir
         fname = self.all_projects
         if osp.exists(fname):

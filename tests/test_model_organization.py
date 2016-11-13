@@ -137,6 +137,11 @@ class OrganizerTest(unittest.TestCase):
         # test file names
         self.organizer.config.save()
         projectname = self.organizer.exp_config['project']
+        print(self.organizer.info(exp_path=True))
+        print('-' * 80)
+        print(osp.join(self.test_dir, projectname,
+                                  '.project',
+                                  self.organizer.experiment + '.yml'))
         self.assertEqual(self.organizer.info(exp_path=True),
                          osp.join(self.test_dir, projectname,
                                   '.project',

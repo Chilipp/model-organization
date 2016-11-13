@@ -23,7 +23,7 @@ docstrings = utils.docstrings
 
 
 if six.PY2:
-    import __builtins__ as builtins
+    import __builtin__ as builtins
     from os import getcwdu as getcwd
     from itertools import ifilterfalse as filterfalse
 else:
@@ -787,11 +787,16 @@ class ModelOrganizer(object):
 
         # ---- if root is None, get it from the archive
         if root is None:
-            with extract_file(osp.join('.project', '.project.yml')) as fp:
+            fp = extract_file(osp.join('.project', '.project.yml'))
+            try:
                 project_config = ordered_yaml_load(fp)
                 # use the projectname in archive only, if nothing is specified
                 # here
                 projectname = projectname or project_config['name']
+            except:
+                raise
+            finally:
+                fp.close()
             # if the projectname is existent in our configuration and already
             # specified, use this one
             if (projectname in self.config.projects and
@@ -1043,7 +1048,7 @@ class ModelOrganizer(object):
                 base[current] = get_archives(current)
         elif exp_path:
             current = self.experiment
-            base = OrderedDict(ExperimentsConfig(self.config.projects))
+            base = self.config.experiments.exp_files
         elif project_path:
             current = self.projectname
             base = OrderedDict(
@@ -1579,6 +1584,8 @@ class ModelOrganizer(object):
             if isinstance(self.config.experiments[experiment], Archive):
                 return self.config.experiments[experiment]
 
+
+
     @staticmethod
     def _archive_extensions():
         """Create translations from file extension to archive format
@@ -1590,12 +1597,27 @@ class ModelOrganizer(object):
         dict
             The mapping from archive format to default file extension
         """
-        ext_map = {}
-        fmt_map = {}
-        for key, exts, desc in shutil.get_unpack_formats():
-            fmt_map[key] = exts[0]
-            for ext in exts:
-                ext_map[ext] = key
+        if six.PY3:
+            ext_map = {}
+            fmt_map = {}
+            for key, exts, desc in shutil.get_unpack_formats():
+                fmt_map[key] = exts[0]
+                for ext in exts:
+                    ext_map[ext] = key
+        else:
+            ext_map = {'.tar': 'tar',
+                       '.tar.bz2': 'bztar',
+                       '.tar.gz': 'gztar',
+                       '.tar.xz': 'xztar',
+                       '.tbz2': 'bztar',
+                       '.tgz': 'gztar',
+                       '.txz': 'xztar',
+                       '.zip': 'zip'}
+            fmt_map = {'bztar': '.tar.bz2',
+                       'gztar': '.tar.gz',
+                       'tar': '.tar',
+                       'xztar': '.tar.xz',
+                       'zip': '.zip'}
         return ext_map, fmt_map
 
     def __reduce__(self):
