@@ -1,0 +1,8 @@
+name: model-organization-docs
+dependencies:
+    - matplotlib
+    - numpy
+    - sphinx
+    - pip:
+        - autodocsumm
+        - sphinx-argparse
