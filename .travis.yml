@@ -30,7 +30,7 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
-  - coverage run --source=model-organization setup.py pytest
+  - coverage run --source=model_organization setup.py pytest
 
 after_success:
   coveralls
