@@ -1,8 +1,8 @@
 .. model_organization documentation master file
 
-==========================================================
-Create an argparse.ArgumentParser from function docstrings
-==========================================================
+================================================
+Organize your computational models transparently
+================================================
 
 .. start-badges
 
