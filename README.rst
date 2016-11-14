@@ -43,11 +43,10 @@ Organize your computational models transparently
     :alt: Supported implementations
     :target: https://pypi.python.org/pypi/model-organization
 
-
 .. end-badges
 
 Welcome! This package attempts to create an interface for managing the usage of
-a climate model. It provides the :class:`ModelOrganization` class that manages
+a climate model. It provides the ModelOrganization class that manages
 different experiments in projects.
 
 See the documentation_ on readthedocs for more information.
