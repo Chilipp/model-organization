@@ -221,7 +221,7 @@ class OrganizerTest(unittest.TestCase):
         spr.call(
             [sys.executable, script] +
             ('-v -id sine setup %s -p trigo init preproc run postproc '
-             'archive -p trigo -rm remove -a' % self.test_dir).split())
+             'archive -p trigo -rm remove -ay' % self.test_dir).split())
         self.assertTrue(osp.exists('trigo.tar'), msg='Archive not found!')
         project_dir = osp.join(self.test_dir, 'trigo')
         self.assertFalse(osp.exists(project_dir),
