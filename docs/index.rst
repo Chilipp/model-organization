@@ -62,6 +62,7 @@ Content
     square
     api/model_organization
     command_line/model
+    changelog
 
 
 .. _install:
