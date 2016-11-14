@@ -82,7 +82,7 @@ def get_configdir(name):
 
 
 def setup_logging(default_path=None, default_level=logging.INFO,
-                  env_key='LOG_IUN'):
+                  env_key=None):
     """
     Setup logging configuration
 
@@ -109,7 +109,7 @@ def setup_logging(default_path=None, default_level=logging.INFO,
     http://victorlin.me/posts/2012/08/26/good-logging-practice-in-python"""
     path = default_path or os.path.join(
         os.path.dirname(__file__), 'logging.yaml')
-    value = os.getenv(env_key, None)
+    value = os.getenv(env_key, None) if env_key is not None else None
     home = _get_home()
     if value:
         path = value
@@ -226,29 +226,50 @@ class Archive(six.text_type):
 
 
 class ExperimentsConfig(OrderedDict):
+    """
+    The configuration of the experiments
 
+    This class acts like a :class:`collections.OrderedDict` but loads the
+    experiment configuration only when you access the specific item (i.e. via
+    ``d['exp_id']``)
+    """
+
+    #: list of str. The keys describing paths for the model. Note that these
+    #: keys here are replaced by the keys in the
+    #: :attr:`~model_organization.ModelOrganizer.paths` attribute of the
+    #: specific :class:`model_organization.ModelOrganizer` instance
     paths = ['expdir', 'src', 'data', 'input', 'outdata', 'outdir',
-             'plot_output', 'project_output']
+             'plot_output', 'project_output', 'forcing']
 
     @property
     def exp_file(self):
+        """The path to the file containing all experiments in the configuration
+        """
         return osp.join(self.projects.conf_dir, 'experiments.yml')
 
     @property
     def project_map(self):
         """A mapping from project name to experiments"""
-        # first update with new experiments
+        # first update with the experiments in the memory (the others should
+        # already be loaded within the :attr:`exp_files` attribute)
         for key, val in self.items():
-            if (isinstance(val, dict) and
-                    key not in self._project_map[val['project']]):
-                self._project_map[val['project']].append(key)
-            elif (isinstance(val, Archive) and
-                  key not in self._project_map[val.project]):
-                self._project_map[val.project].append(key)
+            if isinstance(val, dict):
+                l = self._project_map[val['project']]
+            elif isinstance(val, Archive):
+                l = self._project_map[val.project]
+            else:
+                continue
+            if key not in l:
+                l.append(key)
         return self._project_map
 
     @property
     def exp_files(self):
+        """A mapping from experiment to experiment configuration file
+
+        Note that this attribute only contains experiments whose configuration
+        has already dumped to the file!
+        """
         ret = OrderedDict()
         # restore the order of the experiments
         exp_file = self.exp_file
@@ -271,6 +292,19 @@ class ExperimentsConfig(OrderedDict):
         return ret
 
     def __init__(self, projects, d=None, project_map=None):
+        """
+        Parameters
+        ----------
+        projects: ProjectConfig
+            The project configuration
+        d: dict
+            An alternative dictionary to initialize from. If not given, the
+            experiments are loaded on the fly from the :attr:`exp_files`
+            attribute
+        project_map: dict
+            A mapping from project to experiments. If not given, it is created
+            when accessing the :attr:`project_map` experiment
+        """
         super(ExperimentsConfig, self).__init__()
         self.projects = projects
         self._finalized = False
@@ -397,6 +431,14 @@ class ExperimentsConfig(OrderedDict):
         return d
 
     def save(self):
+        """Save the experiment configuration
+
+        This method stores the configuration of each of the experiments in a
+        file ``'<project-dir>/.project/<experiment>.yml'``, where
+        ``'<project-dir>'`` corresponds to the project directory of the
+        specific ``'<experiment>'``. Furthermore it dumps all experiments to
+        the :attr:`exp_file` configuration file.
+        """
         for exp, d in dict(self).items():
             if isinstance(d, dict):
                 project_path = self.projects[d['project']]['root']
@@ -414,19 +456,52 @@ class ExperimentsConfig(OrderedDict):
         lock.release()
 
     def load(self):
+        """Load all experiments in this dictionary into memory
+        """
         for key in self:
             self[key]
         return self
 
 
 class ProjectsConfig(OrderedDict):
+    """The project configuration
+
+    This class stores the configuration from the projects, where each key
+    corresponds to the name of one project and the value to the corresponding
+    configuration.
+
+    Instances of this class are initialized by a file ``'projects.yml'`` in the
+    configuration directory (see the :attr:`all_projects` attribute) that
+    stores a mapping from project name to project directory path. The
+    configuration for each individual project is then loaded from the
+    ``'<project-dir>/.project/.project.yml'`` file
+
+    Notes
+    -----
+    If you move one project has been moved to another directory, make sure to
+    update the ``'projects.yml'`` file (the rest is updated when loading the
+    configuration)
+    """
 
     @property
     def all_projects(self):
         """The name of the configuration file"""
         return osp.join(self.conf_dir, 'projects.yml')
 
+    #: The path to the configuration directory
+    conf_dir = None
+
     def __init__(self, conf_dir, d=None):
+        """
+        Parameters
+        ----------
+        conf_dir: str
+            The path to the configuration directory containing a file called
+            ``'projects.yml'``
+        d: dict
+            A dictionary to use to setup this configuration instead of loading
+            them from the disk
+        """
         super(ProjectsConfig, self).__init__()
         self.conf_dir = conf_dir
         fname = self.all_projects
@@ -441,11 +516,18 @@ class ProjectsConfig(OrderedDict):
             for project, path in project_paths.items():
                 self[project] = safe_load(
                     osp.join(path, '.project', '.project.yml'))
+                self[project]['root'] = path
 
     def __reduce__(self):
         return self.__class__, (self.conf_dir, OrderedDict(self))
 
     def save(self):
+        """
+        Save the project configuration
+
+        This method dumps the configuration for each project and the project
+        paths (see the :attr:`all_projects` attribute) to the hard drive
+        """
         project_paths = OrderedDict()
         for project, d in OrderedDict(self).items():
             if isinstance(d, dict):
@@ -471,6 +553,16 @@ class Config(object):
     #: configuration
     _store = False
 
+    #: :class:`ExperimentConfig`. The configuration of the experiments
+    experiments = OrderedDict()
+
+    #: :class:`ProjectsConfig`. The configuration of the projects
+    projects = OrderedDict()
+
+    #: :class:`OrderedDict`. The global configuration that applies to all
+    #: projects
+    global_config = OrderedDict()
+
     def __init__(self, name):
         self.name = name
         self.conf_dir = get_configdir(name)
@@ -483,9 +575,9 @@ class Config(object):
             self.global_config = OrderedDict()
 
     def save(self):
+        """
+        Save the entire configuration files
+        """
         self.projects.save()
         self.experiments.save()
         safe_dump(self.global_config, self._globals_file)
-
-
-setup_logging()
