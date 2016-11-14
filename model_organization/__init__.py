@@ -14,7 +14,7 @@ from argparse import Namespace
 import logging
 from model_organization.config import (
     Config, ordered_yaml_dump, ordered_yaml_load, OrderedDict, Archive,
-    ExperimentsConfig, safe_dump)
+    ExperimentsConfig, safe_dump, setup_logging)
 from funcargparse import FuncArgParser
 import model_organization.utils as utils
 
@@ -132,7 +132,9 @@ class ModelOrganizer(object):
         if config is None:
             config = Config(self.name)
         self.config = config
+        self.config.experiments.paths = self.paths
         self._parser_set_up = False
+        setup_logging(env_key='LOG_' + self.name.capitalize())
 
     @classmethod
     def main(cls, args=None):
