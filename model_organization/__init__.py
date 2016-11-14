@@ -134,7 +134,8 @@ class ModelOrganizer(object):
         self.config = config
         self.config.experiments.paths = self.paths
         self._parser_set_up = False
-        setup_logging(env_key='LOG_' + self.name.capitalize())
+        setup_logging(osp.join(self.config.conf_dir, 'logging.yml'),
+                      env_key='LOG_' + self.name.capitalize())
 
     @classmethod
     def main(cls, args=None):
