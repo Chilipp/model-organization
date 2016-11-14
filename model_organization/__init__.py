@@ -131,11 +131,11 @@ class ModelOrganizer(object):
             The configuration of the organizer"""
         if config is None:
             config = Config(self.name)
+            setup_logging(osp.join(config.conf_dir, 'logging.yml'),
+                          env_key='LOG_' + self.name.capitalize())
         self.config = config
         self.config.experiments.paths = self.paths
         self._parser_set_up = False
-        setup_logging(osp.join(self.config.conf_dir, 'logging.yml'),
-                      env_key='LOG_' + self.name.capitalize())
 
     @classmethod
     def main(cls, args=None):
