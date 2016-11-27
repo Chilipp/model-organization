@@ -7,6 +7,7 @@ import logging.config
 import yaml
 import glob
 import fasteners
+import copy
 from collections import OrderedDict, defaultdict
 import model_organization.utils as utils
 
@@ -442,7 +443,7 @@ class ExperimentsConfig(OrderedDict):
         for exp, d in dict(self).items():
             if isinstance(d, dict):
                 project_path = self.projects[d['project']]['root']
-                self.rel_paths(d)
+                d = self.rel_paths(copy.deepcopy(d))
                 fname = osp.join(project_path, '.project', exp + '.yml')
                 if not osp.exists(osp.dirname(fname)):
                     os.makedirs(osp.dirname(fname))
@@ -483,6 +484,13 @@ class ProjectsConfig(OrderedDict):
     configuration)
     """
 
+    #: list of str. The keys describing paths for the model. Note that these
+    #: keys here are replaced by the keys in the
+    #: :attr:`~model_organization.ModelOrganizer.paths` attribute of the
+    #: specific :class:`model_organization.ModelOrganizer` instance
+    paths = ['expdir', 'src', 'data', 'input', 'outdata', 'outdir',
+             'plot_output', 'project_output', 'forcing']
+
     @property
     def all_projects(self):
         """The name of the configuration file"""
@@ -514,12 +522,94 @@ class ProjectsConfig(OrderedDict):
                 self[key] = val
         else:
             for project, path in project_paths.items():
-                self[project] = safe_load(
-                    osp.join(path, '.project', '.project.yml'))
+                self[project] = self.fix_paths(safe_load(
+                    osp.join(path, '.project', '.project.yml')))
                 self[project]['root'] = path
 
     def __reduce__(self):
         return self.__class__, (self.conf_dir, OrderedDict(self))
+
+    @docstrings.dedent
+    def fix_paths(self, d, root=None, project=None):
+        """
+        Fix the paths in the given dictionary to get absolute paths
+
+        Parameters
+        ----------
+        %(ExperimentsConfig.fix_paths.parameters)s
+
+        Returns
+        -------
+        %(ExperimentsConfig.fix_paths.returns)s
+
+        Notes
+        -----
+        d is modified in place!"""
+        if root is None and project is None:
+            project = d.get('project')
+            if project is not None:
+                root = self[project]['root']
+            else:
+                root = d['root']
+        elif root is None:
+            root = self[project]['root']
+        elif project is None:
+            pass
+        paths = self.paths
+        for key, val in d.items():
+            if isinstance(val, dict):
+                d[key] = self.fix_paths(val, root, project)
+            elif key in paths:
+                val = d[key]
+                if isinstance(val, six.string_types) and not osp.isabs(val):
+                    d[key] = osp.join(root, val)
+                elif (isinstance(utils.safe_list(val)[0], six.string_types) and
+                      not osp.isabs(val[0])):
+                    for i in range(len(val)):
+                        val[i] = osp.join(root, val[i])
+        return d
+
+    @docstrings.get_sectionsf('ExperimentsConfig.rel_paths',
+                              sections=['Parameters', 'Returns'])
+    @docstrings.dedent
+    def rel_paths(self, d, root=None, project=None):
+        """
+        Fix the paths in the given dictionary to get relative paths
+
+        Parameters
+        ----------
+        %(ExperimentsConfig.fix_paths.parameters)s
+
+        Returns
+        -------
+        %(ExperimentsConfig.fix_paths.returns)s
+
+        Notes
+        -----
+        d is modified in place!"""
+        if root is None and project is None:
+            project = d.get('project')
+            if project is not None:
+                root = self[project]['root']
+            else:
+                root = d['root']
+        elif root is None:
+            root = self[project]['root']
+        elif project is None:
+            pass
+        paths = self.paths
+        for key, val in d.items():
+            if isinstance(val, dict):
+                d[key] = self.rel_paths(val, root, project)
+            elif key in paths:
+                val = d[key]
+                if isinstance(val, six.string_types) and osp.isabs(val):
+                    d[key] = osp.relpath(val, root)
+                elif (isinstance(utils.safe_list(val)[0], six.string_types) and
+                      osp.isabs(val[0])):
+                    for i in range(len(val)):
+                        val[i] = osp.relpath(val[i], root)
+        return d
 
     def save(self):
         """
@@ -537,6 +627,7 @@ class ProjectsConfig(OrderedDict):
                     os.makedirs(osp.dirname(fname))
                 if osp.exists(fname):
                     os.rename(fname, fname + '~')
+                d = self.rel_paths(copy.deepcopy(d))
                 safe_dump(d, fname)
                 project_paths[project] = project_path
             else:
