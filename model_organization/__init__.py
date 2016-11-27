@@ -1076,7 +1076,7 @@ class ModelOrganizer(object):
                             base[current].move_to_end('id', last=False)
                 else:
                     base = self.config.experiments
-                if complete:
+                if complete and not only_keys:
                     base.load()
                 base = OrderedDict(base)
             else:
