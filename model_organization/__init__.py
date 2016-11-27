@@ -329,7 +329,7 @@ class ModelOrganizer(object):
             except KeyError:
                 pass
 
-    def get_app_main_kwargs(self, kwargs):
+    def get_app_main_kwargs(self, kwargs, keep=False):
         """
         Extract the keyword arguments for the :meth:`app_main` method
 
@@ -338,6 +338,9 @@ class ModelOrganizer(object):
         kwargs: dict
             A mapping containing keyword arguments for the :meth:`app_main`
             method
+        keep: bool
+            If True, the keywords are kept in the `kwargs`. Otherwise, they are
+            removed
 
         Returns
         -------
@@ -348,8 +351,12 @@ class ModelOrganizer(object):
         -----
         The returned keyword arguments are deleted from `kwargs`
         """
-        return {key: kwargs.pop(key) for key in list(kwargs)
-                if key in inspect.getargspec(self.app_main)[0]}
+        if not keep:
+            return {key: kwargs.pop(key) for key in list(kwargs)
+                    if key in inspect.getargspec(self.app_main)[0]}
+        else:
+            return {key: kwargs[key] for key in list(kwargs)
+                    if key in inspect.getargspec(self.app_main)[0]}
 
     # -------------------------------------------------------------------------
     # --------------------------- Infrastructure ------------------------------
