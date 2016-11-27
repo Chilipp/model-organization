@@ -14,7 +14,7 @@ from argparse import Namespace
 import logging
 from model_organization.config import (
     Config, ordered_yaml_dump, ordered_yaml_load, OrderedDict, Archive,
-    ExperimentsConfig, safe_dump, setup_logging)
+    safe_dump, setup_logging)
 from funcargparse import FuncArgParser
 import model_organization.utils as utils
 
@@ -32,7 +32,7 @@ else:
     from itertools import filterfalse as filterfalse
 
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 
 if six.PY2:
@@ -135,6 +135,7 @@ class ModelOrganizer(object):
                           env_key='LOG_' + self.name.capitalize())
         self.config = config
         self.config.experiments.paths = self.paths
+        self.config.projects.paths = self.paths
         self._parser_set_up = False
 
     @classmethod
@@ -1062,7 +1063,7 @@ class ModelOrganizer(object):
             no_fix = True
             base = self.config.global_config
         elif on_projects:
-            base = self.config.projects
+            base = OrderedDict(self.config.projects)
             current = projectname or self.projectname
         else:
             current = self.experiment
@@ -1075,6 +1076,9 @@ class ModelOrganizer(object):
                             base[current].move_to_end('id', last=False)
                 else:
                     base = self.config.experiments
+                if complete:
+                    base.load()
+                base = OrderedDict(base)
             else:
                 base = OrderedDict(
                     (exp, self.config.experiments[exp])
@@ -1586,8 +1590,6 @@ class ModelOrganizer(object):
         else:
             if isinstance(self.config.experiments[experiment], Archive):
                 return self.config.experiments[experiment]
-
-
 
     @staticmethod
     def _archive_extensions():
