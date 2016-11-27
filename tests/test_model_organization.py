@@ -113,7 +113,8 @@ class OrganizerTest(unittest.TestCase):
 
         # test project_config
         d = ordered_yaml_load(organizer.parse_args(['info', '-P', '-nf']).info)
-        self.assertEqual(d, organizer.project_config)
+        self.assertEqual(d, organizer.rel_paths(
+            OrderedDict(organizer.project_config)))
 
         # test global config
         d = ordered_yaml_load(organizer.parse_args(['info', '-g', '-nf']).info)
@@ -131,7 +132,7 @@ class OrganizerTest(unittest.TestCase):
                             msg='Projectnames should differ after setup!')
         # test project_config
         d = ordered_yaml_load(organizer.parse_args(
-            ['info', '-P', '-p', projectname, '-nf']).info)
+            ['info', '-P', '-p', projectname]).info)
         self.assertEqual(d, organizer.config.projects[projectname])
 
         # test file names
