@@ -188,7 +188,7 @@ def safe_load(fname):
         lock.release()
 
 
-def safe_dump(d, fname):
+def safe_dump(d, fname, *args, **kwargs):
     """
     Savely dump `d` to `fname` using yaml
 
@@ -201,6 +201,11 @@ def safe_dump(d, fname):
         The object to dump
     fname: str
         The path where to dump `d`
+
+    Other Parameters
+    ----------------
+    ``*args, **kwargs``
+        Will be forwarded to the :func:`ordered_yaml_dump` function
     """
     if osp.exists(fname):
         os.rename(fname, fname + '~')
@@ -208,7 +213,7 @@ def safe_dump(d, fname):
     lock.acquire()
     try:
         with open(fname, 'w') as f:
-            ordered_yaml_dump(d, f)
+            ordered_yaml_dump(d, f, *args, **kwargs)
     except:
         raise
     finally:
