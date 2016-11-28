@@ -242,6 +242,8 @@ class ExperimentsConfig(OrderedDict):
     paths = ['expdir', 'src', 'data', 'input', 'outdata', 'outdir',
              'plot_output', 'project_output', 'forcing']
 
+    _initialized = True
+
     @property
     def exp_file(self):
         """The path to the file containing all experiments in the configuration
@@ -308,7 +310,9 @@ class ExperimentsConfig(OrderedDict):
         """
         super(ExperimentsConfig, self).__init__()
         self.projects = projects
-        self._finalized = False
+        # necessary switch for python 2 since the item is accessed when setting
+        # it
+        self._initialized = False
         self._project_map = project_map or defaultdict(list)
         if projects:
             if d is not None:
@@ -318,11 +322,11 @@ class ExperimentsConfig(OrderedDict):
                 # setup the paths for the experiments
                 for key, val in self.exp_files.items():
                     self[key] = val
-        self._finalized = False
+        del self._initialized
 
     def __getitem__(self, attr):
         ret = super(ExperimentsConfig, self).__getitem__(attr)
-        if not isinstance(ret, (dict, Archive)):
+        if self._initialized and not isinstance(ret, (dict, Archive)):
             fname = super(ExperimentsConfig, self).__getitem__(attr)
             self[attr] = d = safe_load(fname)
             if isinstance(d, dict):
