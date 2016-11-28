@@ -1,3 +1,12 @@
+v0.1.5
+======
+
+Added
+-----
+* Added as_ordereddict method for ExperimentsConfig that avoids a loading of
+  all experiments when converting to an OrderedDict
+
+
 v0.1.4
 ======
 
