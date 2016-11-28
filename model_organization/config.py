@@ -327,6 +327,7 @@ class ExperimentsConfig(OrderedDict):
     def __getitem__(self, attr):
         ret = super(ExperimentsConfig, self).__getitem__(attr)
         if self._initialized and not isinstance(ret, (dict, Archive)):
+            print('loading ' + attr)
             fname = super(ExperimentsConfig, self).__getitem__(attr)
             self[attr] = d = safe_load(fname)
             if isinstance(d, dict):
@@ -342,7 +343,9 @@ class ExperimentsConfig(OrderedDict):
         super(ExperimentsConfig, self).__setitem__(key, val)
 
     def __reduce__(self):
-        return self.__class__, (self.projects, OrderedDict(self),
+        # in Python2 do not simply make an OrderedDict, because that
+        # accesses the item itself
+        return self.__class__, (self.projects, self.as_ordereddict(),
                                 self._project_map)
 
     @docstrings.get_sectionsf('ExperimentsConfig.fix_paths',
@@ -466,6 +469,17 @@ class ExperimentsConfig(OrderedDict):
         for key in self:
             self[key]
         return self
+
+    def as_ordereddict(self):
+        """Convenience method to convert this object into an OrderedDict"""
+        if six.PY2:
+            d = OrderedDict()
+            copied = dict(self)
+            for key in self:
+                d[key] = copied[key]
+        else:
+            d = OrderedDict(self)
+        return d
 
 
 class ProjectsConfig(OrderedDict):

@@ -32,7 +32,7 @@ else:
     from itertools import filterfalse as filterfalse
 
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 
 
 if six.PY2:
@@ -1085,7 +1085,7 @@ class ModelOrganizer(object):
                     base = self.config.experiments
                 if complete and not only_keys:
                     base.load()
-                base = OrderedDict(base)
+                base = base.as_ordereddict()
             else:
                 base = OrderedDict(
                     (exp, self.config.experiments[exp])
