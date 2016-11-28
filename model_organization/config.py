@@ -1,6 +1,7 @@
 import os
 import os.path as osp
 import six
+import inspect
 import sys
 import logging
 import logging.config
@@ -480,6 +481,46 @@ class ExperimentsConfig(OrderedDict):
         else:
             d = OrderedDict(self)
         return d
+
+    def items(self):
+        # Reimplemented to not load all experiments under python2.7
+        if six.PY2:
+            d = dict(self)
+            return [(key, d[key]) for key in self]
+        return super(ExperimentsConfig, self).items()
+
+    def iteritems(self):
+        # Reimplemented to not load all experiments under python2.7
+        if six.PY2:
+            d = dict(self)
+            return iter((key, d[key]) for key in self)
+        return iter(super(ExperimentsConfig, self).items())
+
+    def values(self):
+        # Reimplemented to not load all experiments under python2.7
+        if six.PY2:
+            d = dict(self)
+            return [d[key] for key in self]
+        return super(ExperimentsConfig, self).values()
+
+    def itervalues(self):
+        # Reimplemented to not load all experiments under python2.7
+        if six.PY2:
+            d = dict(self)
+            return iter(d[key] for key in self)
+        return iter(super(ExperimentsConfig, self).values())
+
+    _note = """
+
+    Notes
+    -----
+    Reimplemented to not load all experiments under python2.7"""
+
+    for _m in ['items', 'iteritems', 'values', 'itervalues']:
+        locals()[_m].__doc__ = (
+            (inspect.getdoc(getattr(OrderedDict, _m, None)) or '') + _note)
+
+    del _m, _note
 
 
 class ProjectsConfig(OrderedDict):
