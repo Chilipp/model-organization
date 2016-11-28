@@ -455,13 +455,14 @@ class ExperimentsConfig(OrderedDict):
                 fname = osp.join(project_path, '.project', exp + '.yml')
                 if not osp.exists(osp.dirname(fname)):
                     os.makedirs(osp.dirname(fname))
-                safe_dump(d, fname)
+                safe_dump(d, fname, default_flow_style=False)
         exp_file = self.exp_file
         # to be 100% sure we do not write to the file from multiple processes
         lock = fasteners.InterProcessLock(exp_file + '.lck')
         lock.acquire()
         safe_dump(OrderedDict((exp, val if isinstance(val, Archive) else None)
-                              for exp, val in self.items()), exp_file)
+                              for exp, val in self.items()),
+                  exp_file, default_flow_style=False)
         lock.release()
 
     def load(self):
@@ -687,12 +688,12 @@ class ProjectsConfig(OrderedDict):
                 if osp.exists(fname):
                     os.rename(fname, fname + '~')
                 d = self.rel_paths(copy.deepcopy(d))
-                safe_dump(d, fname)
+                safe_dump(d, fname, default_flow_style=False)
                 project_paths[project] = project_path
             else:
                 project_paths = self.project_paths[project]
         self.project_paths = project_paths
-        safe_dump(project_paths, self.all_projects)
+        safe_dump(project_paths, self.all_projects, default_flow_style=False)
 
 
 class Config(object):
@@ -730,4 +731,5 @@ class Config(object):
         """
         self.projects.save()
         self.experiments.save()
-        safe_dump(self.global_config, self._globals_file)
+        safe_dump(self.global_config, self._globals_file,
+                  default_flow_style=False)
