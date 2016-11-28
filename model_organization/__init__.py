@@ -132,7 +132,7 @@ class ModelOrganizer(object):
         if config is None:
             config = Config(self.name)
             setup_logging(osp.join(config.conf_dir, 'logging.yml'),
-                          env_key='LOG_' + self.name.capitalize())
+                          env_key='LOG_' + self.name.upper())
         self.config = config
         self.config.experiments.paths = self.paths
         self.config.projects.paths = self.paths
