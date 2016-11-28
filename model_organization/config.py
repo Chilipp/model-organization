@@ -327,7 +327,6 @@ class ExperimentsConfig(OrderedDict):
     def __getitem__(self, attr):
         ret = super(ExperimentsConfig, self).__getitem__(attr)
         if self._initialized and not isinstance(ret, (dict, Archive)):
-            print('loading ' + attr)
             fname = super(ExperimentsConfig, self).__getitem__(attr)
             self[attr] = d = safe_load(fname)
             if isinstance(d, dict):
