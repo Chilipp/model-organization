@@ -336,9 +336,10 @@ class ExperimentsConfig(OrderedDict):
             return ret
 
     def __setitem__(self, key, val):
-        if isinstance(val, Archive):
+        if (isinstance(val, Archive) and
+                key not in self._project_map[val.project]):
             # make sure the project_map is up-to-date
-            self.project_map
+            self._project_map[val.project].append(key)
         super(ExperimentsConfig, self).__setitem__(key, val)
 
     def __reduce__(self):
