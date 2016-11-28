@@ -1,3 +1,11 @@
+v0.1.4
+======
+
+Changed
+-------
+* Fixed bug that loads all experiments in Python2.7 when initializing a
+  ExperimentsConfig
+
 v0.1.3
 ======
 
