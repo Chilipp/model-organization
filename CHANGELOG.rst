@@ -1,3 +1,17 @@
+v0.1.6
+======
+
+Changed
+-------
+* You can modify the behaviour of the logging via the environment variable
+  ``'LOG_' + ModelOrganizer.name.upper()`` (previously, it was
+  ``ModelOrganizer.name.capitalize()``)
+* The ExperimentsConfig class only loads the configuration when it is directly
+  accessed via the ``__getitem__`` method, i.e. via
+  ``organizer.config.experiments[exp]``. Conversion to a dictionary, or the
+  ``items``, ``values``, ``iteritems``, and ``itervalues`` methods will not
+  load the experiment
+
 v0.1.5
 ======
 
