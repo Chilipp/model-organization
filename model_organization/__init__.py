@@ -1083,8 +1083,13 @@ class ModelOrganizer(object):
                             base[current].move_to_end('id', last=False)
                 else:
                     base = self.config.experiments
-                if complete and not only_keys:
-                    base.load()
+                if not only_keys:
+                    # make sure the experiments are loaded
+                    if complete:
+                        base.load()
+                    else:
+                        base[current]
+                # convert to an OrderedDict
                 base = base.as_ordereddict()
             else:
                 base = OrderedDict(
