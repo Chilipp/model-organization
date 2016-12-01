@@ -97,13 +97,11 @@ class ModelOrganizer(object):
     def logger(self):
         """The logger of this organizer"""
         if self._experiment:
-            return logging.getLogger(
-                    '.'.join([__name__, self.name, self.experiment]))
+            return logging.getLogger('.'.join([self.name, self.experiment]))
         elif self._projectname:
-            return logging.getLogger(
-                '.'.join([__name__, self.name, self.projectname]))
+            return logging.getLogger('.'.join([self.name, self.projectname]))
         else:
-            return logging.getLogger('.'.join([__name__, self.name]))
+            return logging.getLogger('.'.join([self.name]))
 
     @property
     def exp_config(self):
