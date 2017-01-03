@@ -1098,7 +1098,8 @@ class ModelOrganizer(object):
 
         if no_fix and not (archives or on_globals):
             for key, val in base.items():
-                base[key] = self.rel_paths(copy.deepcopy(val))
+                if isinstance(val, dict):
+                    base[key] = self.rel_paths(copy.deepcopy(val))
         if not complete:
             base = base[current]
         if only_keys:
