@@ -1,3 +1,10 @@
+v0.1.7
+======
+
+Changed
+-------
+* Minor bug fix in remove command
+
 v0.1.6
 ======
 

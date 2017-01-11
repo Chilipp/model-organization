@@ -32,7 +32,7 @@ else:
     from itertools import filterfalse as filterfalse
 
 
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 
 
 if six.PY2:
@@ -933,8 +933,7 @@ class ModelOrganizer(object):
             experiments = list(all_experiments.keys())
             projects = list(projects_info.keys())
         elif projectname is not None:
-            experiments = [exp for exp, val in all_experiments.items()
-                           if val['project'] == self.projectname]
+            experiments = all_experiments.project_map[projectname]
             projects = [self.projectname]
         else:
             experiments = [self.experiment]
