@@ -11,11 +11,11 @@ def readme():
 
 
 setup(name='model-organization',
-      version='0.1.7',
+      version='0.1.8',
       description=('Organize your computational models transparently'),
       long_description=readme(),
       classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Documentation',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',

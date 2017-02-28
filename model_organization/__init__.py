@@ -32,7 +32,7 @@ else:
     from itertools import filterfalse as filterfalse
 
 
-__version__ = '0.1.7'
+__version__ = '0.1.8'
 
 
 if six.PY2:
