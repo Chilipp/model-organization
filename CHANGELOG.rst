@@ -1,3 +1,10 @@
+v0.1.9
+======
+Changed
+-------
+* The ``remove`` command now removes the configuration files for the 
+  experiments, too
+
 v0.1.8
 ======
 
