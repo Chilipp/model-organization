@@ -32,7 +32,7 @@ else:
     from itertools import filterfalse as filterfalse
 
 
-__version__ = '0.1.8'
+__version__ = '0.1.9'
 
 
 if six.PY2:
@@ -448,7 +448,10 @@ class ModelOrganizer(object):
             raise ValueError(
                 "The specified experiment has already been archived! Run "
                 "``%s -id %s unarchive`` first" % (self.name, experiment))
-        projectname = self.projectname
+        if projectname is None:
+            projectname = self.projectname
+        else:
+            self.projectname = projectname
         self.logger.info("Initializing experiment %s of project %s",
                          experiment, projectname)
         exp_dict = experiments.setdefault(experiment, OrderedDict())
@@ -954,9 +957,14 @@ class ModelOrganizer(object):
         for exp in experiments:
             if not self.is_archived(exp):
                 self.logger.debug("Removing experiment %s", exp)
-                exp_dict = self.fix_paths(all_experiments.pop(exp))
-                if osp.exists(exp_dict['expdir']):
-                    shutil.rmtree(exp_dict['expdir'])
+                try:
+                    exp_dict = self.fix_paths(all_experiments.pop(exp))
+                except KeyError:  # experiment has been removed already
+                    pass
+                else:
+                    if osp.exists(exp_dict['expdir']):
+                        shutil.rmtree(exp_dict['expdir'])
+                    self.config.remove_experiment(exp)
 
         if complete:
             for project in projects:

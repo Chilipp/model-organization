@@ -11,7 +11,7 @@ def readme():
 
 
 setup(name='model-organization',
-      version='0.1.8',
+      version='0.1.9',
       description=('Organize your computational models transparently'),
       long_description=readme(),
       classifiers=[

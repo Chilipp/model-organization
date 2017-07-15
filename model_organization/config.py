@@ -516,6 +516,20 @@ class ExperimentsConfig(OrderedDict):
             return iter(d[key] for key in self)
         return iter(super(ExperimentsConfig, self).values())
 
+    def remove(self, experiment):
+        """Remove the configuration of an experiment"""
+        try:
+            del self[experiment]
+        except KeyError:
+            pass
+        try:
+            config_path = self.exp_files[experiment]
+        except KeyError:
+            return
+        for f in [config_path, config_path + '~', config_path + '.lck']:
+            if os.path.exists(f):
+                os.remove(f)
+
     _note = """
 
     Notes
@@ -729,6 +743,9 @@ class Config(object):
             self.global_config = safe_load(self._globals_file)
         else:
             self.global_config = OrderedDict()
+
+    def remove_experiment(self, experiment):
+        self.experiments.remove(experiment)
 
     def save(self):
         """

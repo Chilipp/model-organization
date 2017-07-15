@@ -187,13 +187,19 @@ class OrganizerTest(unittest.TestCase):
         self._test_init()
         organizer = self.organizer
         experiment = organizer.experiment
-        project = self.organizer.projectname
-        root = self.organizer.project_config['root']
+        project = organizer.projectname
+        root = organizer.project_config['root']
         exp_dir = organizer.fix_paths(organizer.exp_config)['expdir']
+        config_file = osp.join(root, '.project', experiment + '.yml')
+        organizer.config.save()
+        self.assertTrue(osp.exists(config_file),
+                        msg=config_file + ' is missing!')
         self.organizer.parse_args(['-id', experiment, 'remove', '-y'])
         self.assertNotIn(experiment, organizer.config.experiments)
         self.assertFalse(osp.exists(exp_dir),
                          msg='%s exists but should not!' % exp_dir)
+        self.assertFalse(osp.exists(config_file),
+                         msg='%s exists but should not!' % config_file)
         self.assertTrue(osp.exists(root),
                         msg='%s does not exist!' % root)
 
