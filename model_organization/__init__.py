@@ -958,7 +958,7 @@ class ModelOrganizer(object):
             if not self.is_archived(exp):
                 self.logger.debug("Removing experiment %s", exp)
                 try:
-                    exp_dict = self.fix_paths(all_experiments.pop(exp))
+                    exp_dict = self.fix_paths(all_experiments[exp])
                 except KeyError:  # experiment has been removed already
                     pass
                 else:

@@ -519,16 +519,14 @@ class ExperimentsConfig(OrderedDict):
     def remove(self, experiment):
         """Remove the configuration of an experiment"""
         try:
-            del self[experiment]
-        except KeyError:
-            pass
-        try:
-            config_path = self.exp_files[experiment]
+            project_path = self.projects[self[experiment]['project']]['root']
         except KeyError:
             return
+        config_path = osp.join(project_path, '.project', experiment + '.yml')
         for f in [config_path, config_path + '~', config_path + '.lck']:
             if os.path.exists(f):
                 os.remove(f)
+        del self[experiment]
 
     _note = """
 
