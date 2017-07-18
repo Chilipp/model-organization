@@ -9,4 +9,4 @@ dependencies:
     - jupyter_client
     - pip:
         - autodocsumm
-        - sphinx-argparse
+        - sphinx-argparse==0.1.17
