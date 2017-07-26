@@ -6,7 +6,7 @@ Organize your computational models transparently
 
 .. start-badges
 
-.. only:: html
+.. only:: html and not epub
 
     .. list-table::
         :stub-columns: 1
