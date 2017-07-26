@@ -6,45 +6,46 @@ Organize your computational models transparently
 
 .. start-badges
 
-.. list-table::
-    :stub-columns: 1
-    :widths: 10 90
+.. only:: html
 
-    * - docs
-      - |docs|
-    * - tests
-      - |travis| |requires| |coveralls|
-    * - package
-      - |version| |supported-versions| |supported-implementations|
+    .. list-table::
+        :stub-columns: 1
+        :widths: 10 90
 
-.. |docs| image:: http://readthedocs.org/projects/model-organization/badge/?version=latest
-    :alt: Documentation Status
-    :target: http://model-organization.readthedocs.io/en/latest/?badge=latest
+        * - docs
+          - |docs|
+        * - tests
+          - |travis| |requires| |coveralls|
+        * - package
+          - |version| |supported-versions| |supported-implementations|
 
-.. |travis| image:: https://travis-ci.org/Chilipp/model-organization.svg?branch=master
-    :alt: Travis
-    :target: https://travis-ci.org/Chilipp/model-organization
+    .. |docs| image:: http://readthedocs.org/projects/model-organization/badge/?version=latest
+        :alt: Documentation Status
+        :target: http://model-organization.readthedocs.io/en/latest/?badge=latest
 
-.. |coveralls| image:: https://coveralls.io/repos/github/Chilipp/model-organization/badge.svg?branch=master
-    :alt: Coverage
-    :target: https://coveralls.io/github/Chilipp/model-organization?branch=master
+    .. |travis| image:: https://travis-ci.org/Chilipp/model-organization.svg?branch=master
+        :alt: Travis
+        :target: https://travis-ci.org/Chilipp/model-organization
 
-.. |requires| image:: https://requires.io/github/Chilipp/model-organization/requirements.svg?branch=master
-    :alt: Requirements Status
-    :target: https://requires.io/github/Chilipp/model-organization/requirements/?branch=master
+    .. |coveralls| image:: https://coveralls.io/repos/github/Chilipp/model-organization/badge.svg?branch=master
+        :alt: Coverage
+        :target: https://coveralls.io/github/Chilipp/model-organization?branch=master
 
-.. |version| image:: https://img.shields.io/pypi/v/model-organization.svg?style=flat
-    :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/model-organization
+    .. |requires| image:: https://requires.io/github/Chilipp/model-organization/requirements.svg?branch=master
+        :alt: Requirements Status
+        :target: https://requires.io/github/Chilipp/model-organization/requirements/?branch=master
 
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/model-organization.svg?style=flat
-    :alt: Supported versions
-    :target: https://pypi.python.org/pypi/model-organization
+    .. |version| image:: https://img.shields.io/pypi/v/model-organization.svg?style=flat
+        :alt: PyPI Package latest release
+        :target: https://pypi.python.org/pypi/model-organization
 
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/model-organization.svg?style=flat
-    :alt: Supported implementations
-    :target: https://pypi.python.org/pypi/model-organization
+    .. |supported-versions| image:: https://img.shields.io/pypi/pyversions/model-organization.svg?style=flat
+        :alt: Supported versions
+        :target: https://pypi.python.org/pypi/model-organization
 
+    .. |supported-implementations| image:: https://img.shields.io/pypi/implementation/model-organization.svg?style=flat
+        :alt: Supported implementations
+        :target: https://pypi.python.org/pypi/model-organization
 
 .. end-badges
 
@@ -106,4 +107,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
