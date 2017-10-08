@@ -79,7 +79,7 @@ The package is based upon
 - six_: For compatibility issues between python 2 and python 3
 - fasteners_: For a parallel access to the configuration files
 
-The package has been tested for python 2.7 and 3.5.
+The package is regularly tested for python 2.7, 3.4, 3.5 and 3.6.
 
 .. _funcargparse: http://funcargparse.readthedocs.io/en/latest/
 .. _PyYAML: http://pyyaml.org/wiki/PyYAML
