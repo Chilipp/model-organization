@@ -1,3 +1,5 @@
+.. _command-model-get-value:
+
 model get-value
 ===============
 

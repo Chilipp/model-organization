@@ -1,3 +1,5 @@
+.. _command-model-set-value:
+
 model set-value
 ===============
 

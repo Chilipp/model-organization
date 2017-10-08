@@ -1,3 +1,5 @@
+.. _command-model-remove:
+
 model remove
 ============
 

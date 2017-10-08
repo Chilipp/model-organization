@@ -1,3 +1,5 @@
+.. _command-model-del-value:
+
 model del-value
 ===============
 

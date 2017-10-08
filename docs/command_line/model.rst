@@ -1,4 +1,4 @@
-.. _command_line_api:
+.. _command-line-api:
 
 Command Line API Reference
 ==========================

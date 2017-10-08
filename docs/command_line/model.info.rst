@@ -1,3 +1,5 @@
+.. _command-model-info:
+
 model info
 ==========
 

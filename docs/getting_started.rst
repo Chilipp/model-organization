@@ -18,11 +18,12 @@ the user to interfere with the model from the command line.
 
 How does the package work
 -------------------------
-When doing research, we usually have a specific (funding) project that requests
-multiple runs of our model. The model-organization package is oriented at this
-basic structure: It works with projects, each project contains several
-experiments. The package keeps track of your projects and experiments and saves
-the configuration in separate yaml files.
+When doing research, we usually have a specific (funding) *project* that
+requests multiple runs (*experiments*) of our model. The framework of the
+model-organization package mirrors this basic structure: It works with
+projects, each project contains several experiments. The package keeps track of
+your projects and experiments and saves the configuration in separate
+configuration (.yml) files.
 
 
 Configuration files
@@ -32,7 +33,8 @@ determined by the :attr:`~ModelOrganizer.name` attribute of your model (see the
 :func:`config.get_configdir` function). By default, it's (on linux and mac)
 ``"~/.config/<name>"``, but you can determine it via the global
 ``<NAME>CONFIGDIR`` variable, where ``<name>`` must be replaced by the
-:attr:`ModelOrganizer.name` of your model. Our example below would store the
+:attr:`ModelOrganizer.name` of your model. Our
+:ref:`example below <square_example>` would store the
 configuration files in ``"$HOME/.config/square"`` and the corresponding
 environment variable is ``SQUARECONFIGDIR``.
 
@@ -46,10 +48,12 @@ experiments.yml
     The list of experiments
 
 Additional, each project directory contains a ``'.project'`` directory where
-each experiment is represented by one yaml file (e.g. ``'sine.yml'``) and the
+each experiment is represented by one yaml file (e.g. ``'sine.yml'`` in
+our :ref:`example <square_example>`) and the
 project configuration is stored in ``'.project/.project.yml'``. To get the
 specific name of the configuration file, you can also use the `exp_path`
-parameter of the :meth:`~ModelOrganizer.info` method.
+parameter of the :meth:`~ModelOrganizer.info` method or the command
+:ref:`command-model-info` respectively.
 
 
 Creating your own :class:`ModelOrganizer`

@@ -1,3 +1,5 @@
+.. _command-model-unarchive:
+
 model unarchive
 ===============
 

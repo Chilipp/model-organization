@@ -10,10 +10,11 @@ from docrep import dedents
 def document_parsers(parser, base_key='model'):
     f = open(osp.join(api_dir, base_key + '.rst'), 'w')
     if len(base_key.split('.')) == 1:
-        f.write('.. _command_line_api:\n\n')
+        f.write('.. _command-line-api:\n\n')
         title = 'Command Line API Reference'
     else:
         title = base_key.replace('.', ' ')
+        f.write('.. _command-' + base_key.replace('.', '-') + ':\n\n')
     f.write(title + '\n')
     f.write('=' * len(title) + '\n\n')
 

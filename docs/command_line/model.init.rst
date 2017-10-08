@@ -1,3 +1,5 @@
+.. _command-model-init:
+
 model init
 ==========
 
