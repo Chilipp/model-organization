@@ -67,6 +67,7 @@ if on_rtd:
     spr.call([sys.executable] +
              ('-m ipykernel install --user --name python3 '
               '--display-name python3').split())
+    open('matplotlibrc', 'w').close()
 
 
 # The encoding of source files.
