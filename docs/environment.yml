@@ -1,6 +1,7 @@
 name: model-organization-docs
 channels:
     - chilipp/label/dev
+    - conda-forge
 dependencies:
     - python=3.6
     - matplotlib
