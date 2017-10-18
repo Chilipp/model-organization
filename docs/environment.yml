@@ -1,12 +1,14 @@
 name: model-organization-docs
+channels:
+    - chilipp/label/dev
 dependencies:
-    - python=3.5
+    - python=3.6
     - matplotlib
     - numpy
     - sphinx
     - seaborn
     - ipython
     - jupyter_client
+    - sphinx-argparse
     - pip:
         - autodocsumm
-        - sphinx-argparse==0.1.17
