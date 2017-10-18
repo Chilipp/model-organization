@@ -74,7 +74,7 @@ the :meth:`~ModelOrganizer.main` method to run your model. You can do
     if __name__ == '__main__':
         SquareModelOrganizer.main()
 
-You can see, the results of this methodology in the :ref:`command_line_api`.
+You can see, the results of this methodology in the :ref:`command-line-api`.
 
 
 Parallel usage
