@@ -412,6 +412,7 @@ class ModelOrganizer(object):
     def _modify_setup(self, parser):
         self._modify_app_main(parser)
 
+    @docstrings.get_sectionsf('ModelOrganizer.init')
     @docstrings.dedent
     def init(self, projectname=None, description=None, **kwargs):
         """
