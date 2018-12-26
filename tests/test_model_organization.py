@@ -268,8 +268,9 @@ class OrganizerTest(unittest.TestCase):
         self.organizer.config.save()
         organizer2 = self.organizer.__class__()
         # the experiment config should not have been loaded
-        self.assertIsInstance(dict(organizer2.config.experiments)[exp],
-                              six.string_types)
+        self.assertIsInstance(
+            dict.__getitem__(organizer2.config.experiments, exp),
+            six.string_types)
 
 
 if __name__ == '__main__':
