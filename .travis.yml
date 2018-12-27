@@ -21,7 +21,7 @@ install:
   - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
-  - conda create python=$TRAVIS_PYTHON_VERSION matplotlib seaborn numpy -n test_env
+  - conda create python=$TRAVIS_PYTHON_VERSION matplotlib seaborn numpy pyqt>5.7 -n test_env
   - source activate test_env
   - pip install coveralls pytest-cov
   - python setup.py install
