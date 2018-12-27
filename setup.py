@@ -24,7 +24,7 @@ class PyTest(TestCommand):
 
 
 setup(name='model-organization',
-      version='0.1.9',
+      version='0.1.10',
       description=('Organize your computational models transparently'),
       long_description=readme(),
       classifiers=[

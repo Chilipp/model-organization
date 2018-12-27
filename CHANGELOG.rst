@@ -1,8 +1,17 @@
+v0.1.10
+=======
+Compatibility fix for python3.7
+
+Changed
+-------
+* A bug has been fixed for the archiving using pythons tarfile library
+  for python 3.7
+
 v0.1.9
 ======
 Changed
 -------
-* The ``remove`` command now removes the configuration files for the 
+* The ``remove`` command now removes the configuration files for the
   experiments, too
 
 v0.1.8
