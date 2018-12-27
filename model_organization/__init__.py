@@ -1,5 +1,6 @@
 from __future__ import print_function, division
 import os
+import sys
 import glob
 import copy
 import os.path as osp
@@ -530,7 +531,11 @@ class ModelOrganizer(object):
             return
 
         def tar_add(path, file_obj):
-            file_obj.add(path, self.relpath(path), exclude=to_exclude)
+            if sys.version_info[:2] < (3, 7):
+                file_obj.add(path, self.relpath(path), exclude=to_exclude)
+            else:
+                file_obj.add(path, self.relpath(path),
+                             filter=lambda f: None if to_exclude(f) else f)
 
         def zip_add(path, file_obj):
             # ziph is zipfile handle
