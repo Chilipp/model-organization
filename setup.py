@@ -49,7 +49,7 @@ setup(name='model-organization',
       install_requires=[
           'funcargparse',
           'six',
-          'pyyaml',
+          'PyYAML>=4.2b4',
           'docrep',
           'fasteners',
       ],
